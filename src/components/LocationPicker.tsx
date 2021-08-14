@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { Button } from "antd";
+import { SearchOutlined } from "@ant-design/icons";
 
 type Props = {
   setLat: any;
@@ -26,8 +28,10 @@ export const LocationPicker = ({ setLat, setLng }: Props) => {
   };
 
   return (
-    <>
-      <button onClick={getLocation}>Me localiser</button>
+    <div className="location-picker">
+      <Button type="primary" onClick={getLocation} icon={<SearchOutlined />}>
+        Me localiser
+      </Button>
       <br />
       <input
         type="text"
@@ -39,6 +43,6 @@ export const LocationPicker = ({ setLat, setLng }: Props) => {
           width: "auto",
         }}
       />
-    </>
+    </div>
   );
 };

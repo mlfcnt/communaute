@@ -8,10 +8,11 @@ import {
   useMapEvents,
 } from "react-leaflet";
 import { LatLngExpression } from "leaflet";
+import { Instructions } from "./Instructions";
 
 type Props = {
-  lat: any;
-  lng: any;
+  lat: number;
+  lng: number;
 };
 
 type Marker = {
@@ -22,14 +23,17 @@ type Marker = {
 
 export const Map = ({ lat, lng }: Props) => {
   return (
-    <MapContainer
-      center={[lat, lng]}
-      zoom={20}
-      scrollWheelZoom
-      doubleClickZoom={false}
-    >
-      <ActualMap lat={lat} lng={lng} />
-    </MapContainer>
+    <>
+      <MapContainer
+        center={[lat, lng]}
+        zoom={20}
+        scrollWheelZoom
+        doubleClickZoom={false}
+      >
+        <ActualMap lat={lat} lng={lng} />
+      </MapContainer>
+      <Instructions />
+    </>
   );
 };
 

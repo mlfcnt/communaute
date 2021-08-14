@@ -1,13 +1,38 @@
-body {
-  max-width: 80%;
+.main-layout {
+  min-height: 100vh;
+  font-size: 1.1rem;
+}
+
+.header {
+  color: #f0f5ff;
+  text-align: center;
+  font-size: 1.2rem;
+  margin-bottom: 50px;
+}
+
+.content {
+  width: 70%;
   margin: auto;
 }
 
-.title {
-  text-align: center;
+.location-picker {
+  margin-bottom: 50px;
+}
+
+.location-picker > button {
+  margin-bottom: 20px;
 }
 
 .leaflet-container {
-  height: 900px;
+  height: 50vh;
   width: 100%;
+  display: flex;
+}
+
+.instructions {
+  margin-top: 50px;
+}
+
+.footer {
+  text-align: right;
 }
