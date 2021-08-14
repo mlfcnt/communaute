@@ -23,7 +23,7 @@ function App() {
           "La carte s'affichera une fois que vous serez localisé"
         )}
       </Content>
-      <Footer className="footer">TMN</Footer>
+      <Footer className="footer">TMN / AHN</Footer>
     </Layout>
   );
 }
