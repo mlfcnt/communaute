@@ -1,0 +1,13 @@
+body {
+  max-width: 80%;
+  margin: auto;
+}
+
+.title {
+  text-align: center;
+}
+
+.leaflet-container {
+  height: 900px;
+  width: 100%;
+}
