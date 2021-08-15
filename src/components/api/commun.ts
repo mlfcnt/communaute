@@ -31,7 +31,6 @@ export const useFetch = (key: string, url: string, data?: any) => {
     isLoading,
     error,
   } = useQuery(key, () => fetcher(url, eMethod.GET, data));
-  console.log({ res, isLoading, error });
   return {
     data: res?.data,
     loading: isLoading,
