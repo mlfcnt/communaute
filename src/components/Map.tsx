@@ -1,73 +1,72 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "leaflet/dist/leaflet.css";
 import {
   MapContainer,
   TileLayer,
-  Marker,
+  Marker as MarkerComponent,
   Popup,
   useMapEvents,
 } from "react-leaflet";
-import { LatLngExpression } from "leaflet";
 import { Instructions } from "./Instructions";
+import { useCreateMarker, useMarkers } from "./api/markers";
+import { Marker } from "../types";
 
 type Props = {
-  lat: number;
-  lng: number;
+  latitude: number;
+  longitude: number;
 };
 
-type Marker = {
-  id: number;
-  position: LatLngExpression;
-  popupContent: string;
-};
-
-export const Map = ({ lat, lng }: Props) => {
+export const Map = ({ latitude, longitude }: Props) => {
   return (
     <>
       <MapContainer
-        center={[lat, lng]}
+        center={[latitude, longitude]}
         zoom={20}
         scrollWheelZoom
         doubleClickZoom={false}
       >
-        <ActualMap lat={lat} lng={lng} />
+        <ActualMap />
       </MapContainer>
       <Instructions />
     </>
   );
 };
 
-const ActualMap = ({ lat, lng }: Props) => {
-  const [markers, setMarkers] = useState<Marker[]>([
-    {
-      id: 1,
-      position: { lat, lng },
-      popupContent: "Vous êtes ici.",
-    },
-  ]);
+const ActualMap = () => {
+  const { data: dbMarkers, loading } = useMarkers();
+  console.log("🚀 ~ ActualMap ~ dbMarkers", dbMarkers);
+  const [markers, setMarkers] = useState<Marker[]>([]);
+
+  const { mutate: createMarker } = useCreateMarker();
+
+  const handleNewMarker = (marker: Omit<Marker, "id">) => createMarker(marker);
+
+  useEffect(() => {
+    if (!dbMarkers) return;
+    setMarkers(dbMarkers);
+  }, [dbMarkers]);
+
+  const displayMarkers = () => {
+    return (markers || []).map(({ id, latitude, longitude, content }) => (
+      <MarkerComponent key={id} position={{ lat: latitude, lng: longitude }}>
+        <Popup>{content}</Popup>
+      </MarkerComponent>
+    ));
+  };
 
   useMapEvents({
-    dblclick: ({ latlng }) => {
-      setMarkers([
-        ...markers,
-        {
-          id: new Date().getMilliseconds(),
-          position: latlng,
-          popupContent: `Event ajouté le ${new Date().toDateString()}`,
-        },
-      ]);
+    dblclick: ({ latlng: { lat, lng } }) => {
+      handleNewMarker({
+        latitude: lat,
+        longitude: lng,
+        content: `Event ajouté le ${new Date().toLocaleTimeString()}`,
+      });
     },
   });
 
-  const displayMarkers = () =>
-    markers.map(({ id, position, popupContent }) => (
-      <Marker key={id} position={position}>
-        <Popup>{popupContent}</Popup>
-      </Marker>
-    ));
-
   return (
     <>
+      {loading && <p>Chargement des marqueurs...</p>}
       <TileLayer
         attribution='&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
         url="https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png"
