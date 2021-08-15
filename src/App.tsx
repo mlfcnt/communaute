@@ -4,7 +4,7 @@ import "antd/dist/antd.css";
 import "./App.css";
 import { ReactQueryDevtools } from "react-query/devtools";
 
-import { Map } from "./components/Map";
+import { Map } from "./components/map/Map";
 import Layout, { Content, Footer, Header } from "antd/lib/layout/layout";
 import { QueryClient, QueryClientProvider } from "react-query";
 

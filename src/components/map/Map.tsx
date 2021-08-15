@@ -7,9 +7,12 @@ import {
   Popup,
   useMapEvents,
 } from "react-leaflet";
-import { Instructions } from "./Instructions";
-import { useCreateMarker, useMarkers } from "./api/markers";
-import { Marker } from "../types";
+import { Instructions } from "../Instructions";
+import { useMarkers } from "../api/markers";
+import { Marker } from "../../types";
+import { useToggle } from "react-use";
+import { NewMarkerModal } from "./NewMarkerModal";
+import { LatLngLiteral } from "leaflet";
 
 type Props = {
   latitude: number;
@@ -34,12 +37,10 @@ export const Map = ({ latitude, longitude }: Props) => {
 
 const ActualMap = () => {
   const { data: dbMarkers, loading } = useMarkers();
-  console.log("🚀 ~ ActualMap ~ dbMarkers", dbMarkers);
   const [markers, setMarkers] = useState<Marker[]>([]);
-
-  const { mutate: createMarker } = useCreateMarker();
-
-  const handleNewMarker = (marker: Omit<Marker, "id">) => createMarker(marker);
+  const [showCreateModal, toggleCreateModal] = useToggle(false);
+  const [selectedLocation, setSelectedLocation] =
+    useState<LatLngLiteral | null>(null);
 
   useEffect(() => {
     if (!dbMarkers) return;
@@ -47,20 +48,17 @@ const ActualMap = () => {
   }, [dbMarkers]);
 
   const displayMarkers = () => {
-    return (markers || []).map(({ id, latitude, longitude, content }) => (
+    return (markers || []).map(({ id, latitude, longitude, description }) => (
       <MarkerComponent key={id} position={{ lat: latitude, lng: longitude }}>
-        <Popup>{content}</Popup>
+        <Popup>{description}</Popup>
       </MarkerComponent>
     ));
   };
 
   useMapEvents({
-    dblclick: ({ latlng: { lat, lng } }) => {
-      handleNewMarker({
-        latitude: lat,
-        longitude: lng,
-        content: `Event ajouté le ${new Date().toLocaleTimeString()}`,
-      });
+    dblclick: ({ latlng }) => {
+      setSelectedLocation(latlng);
+      toggleCreateModal();
     },
   });
 
@@ -72,6 +70,11 @@ const ActualMap = () => {
         url="https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png"
       />
       {displayMarkers()}
+      <NewMarkerModal
+        show={showCreateModal}
+        toggle={toggleCreateModal}
+        selectedLocation={selectedLocation}
+      />
     </>
   );
 };
