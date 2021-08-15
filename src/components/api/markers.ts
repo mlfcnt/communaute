@@ -5,6 +5,8 @@ import { eMethod, fetcher, useFetch } from "./commun";
 const ROOT_URL = "http://localhost:3030/markers";
 
 export const useMarkers = () => useFetch("markers", ROOT_URL);
+export const useMarkersCategories = () =>
+  useFetch("markers-categories", "http://localhost:3030/markers-categories");
 
 export const useCreateMarker = () => {
   const queryClient = useQueryClient();

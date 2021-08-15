@@ -7,10 +7,13 @@ import { ReactQueryDevtools } from "react-query/devtools";
 import { Map } from "./components/map/Map";
 import Layout, { Content, Footer, Header } from "antd/lib/layout/layout";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { MapperFilters } from "./components/MapperFilters";
+import { Filter } from "./types";
 
 function App() {
   const [lat, setLat] = useState<number | null>(null);
   const [lng, setLng] = useState<number | null>(null);
+  const [filter, setFilter] = useState<Filter | null>(null);
 
   const queryClient = new QueryClient();
 
@@ -22,9 +25,12 @@ function App() {
         </Header>
 
         <Content className="content">
-          <LocationPicker setLat={setLat} setLng={setLng} />
+          {(!lat || !lng) && <LocationPicker setLat={setLat} setLng={setLng} />}
           {lat && lng ? (
-            <Map latitude={lat} longitude={lng} />
+            <>
+              <MapperFilters setFilter={setFilter} />
+              <Map latitude={lat} longitude={lng} filter={filter} />
+            </>
           ) : (
             "La carte s'affichera une fois que vous serez localisé"
           )}

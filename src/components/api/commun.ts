@@ -32,7 +32,7 @@ export const useFetch = (key: string, url: string, data?: any) => {
     error,
   } = useQuery(key, () => fetcher(url, eMethod.GET, data));
   return {
-    data: res?.data,
+    data: res,
     loading: isLoading,
     error: error,
   };
