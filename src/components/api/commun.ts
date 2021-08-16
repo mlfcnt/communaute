@@ -8,8 +8,8 @@ export enum eMethod {
 export const fetcher = async (
   url: string,
   method: eMethod = eMethod.GET,
-  data: any
-) => {
+  data: unknown
+): Promise<unknown> => {
   const options: any = {
     method,
     headers: {
@@ -25,7 +25,15 @@ export const fetcher = async (
     });
 };
 
-export const useFetch = (key: string, url: string, data?: any) => {
+export const useFetch = (
+  key: string,
+  url: string,
+  data?: unknown
+): {
+  data: unknown;
+  loading: boolean;
+  error: unknown;
+} => {
   const {
     data: res,
     isLoading,

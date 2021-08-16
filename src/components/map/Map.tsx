@@ -40,6 +40,7 @@ export const Map = ({ latitude, longitude, filter }: Props) => {
 
 const ActualMap = ({ filter }: { filter: Filter | null }) => {
   const { data: dbMarkers, loading: loadingMarkers } = useMarkers();
+  console.log("🚀 ~ ActualMap ~ dbMarkers", dbMarkers);
   const { data: dbMarkersCategories, loading: loadingCategories } =
     useMarkersCategories();
   const [markers, setMarkers] = useState<Marker[]>([]);
@@ -57,6 +58,7 @@ const ActualMap = ({ filter }: { filter: Filter | null }) => {
     const filteredMarkers = filter
       ? markers.filter((marker) => marker.category === filter)
       : markers;
+
     return (filteredMarkers || []).map(
       ({ id, latitude, longitude, description, category }) => (
         <MarkerComponent key={id} position={{ lat: latitude, lng: longitude }}>
